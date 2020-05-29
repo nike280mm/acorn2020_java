@@ -22,11 +22,9 @@ public class MainClass02 {
 		
 		int num3=0;
 		int result1 = num3++; // result1에 0이 대입되고 num3가 1 증가한다
-		int result1 = num3++; // result1 에 0 이 대입되고 num3 가 1 증가한다. 
 		
 		int num4=0;
 		int result2 = ++num4; // num4가 1 증가하고 result2에 1이 대입된다
-		int result2 = ++num4; // num4 가 1 증가하고 result2 에 1 이 대입된다.
 	}
 }
 
