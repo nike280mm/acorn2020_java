@@ -4,7 +4,8 @@ package test.main;
  */
 public class MainClass04 {
 	public static void main(String[] args) {
-		// or 연산
+
+		// or 연산 
 		boolean result1 = false || false; //false
 		boolean result2 = false || true; //true
 		boolean result3 = true || false; //true
@@ -14,7 +15,7 @@ public class MainClass04 {
 		boolean result6 = false && true; //false
 		boolean result7 = true && false; //false
 		boolean result8 = true && true; //true
-		// not 연산		
+		// not 연산
 		boolean result9 = !true; //false
 		boolean result19 = !false; //true
 		
