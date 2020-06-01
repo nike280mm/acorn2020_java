@@ -48,6 +48,11 @@ public class MyObject {
 	public void useCar(Car car) {
 		car.drive();
 	}
+	// String type 과 Car type을 메소드의 인자로 전달받는 메소드
+	public void useSome(String name, Car car) {
+		System.out.println("name: "+name);
+		car.drive();
+	}
 }
 
 
