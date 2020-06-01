@@ -1,5 +1,6 @@
 package test.main;
 
+import test.mypac.Brand;
 import test.mypac.Car;
 import test.mypac.Coffee;
 import test.mypac.MyObject;
@@ -14,6 +15,7 @@ public class MainClass05 {
 		Radio mara1 = new Radio();
 		Speaker masp1 = new Speaker();
 		Coffee maco1 = new Coffee();
+		Brand mabr1 = new Brand();
 		
 		/*
 		 * test.mypac 패키지에 다양한 모양의 메소드를 가지는
@@ -22,6 +24,6 @@ public class MainClass05 {
 		 */
 		
 		maco1.extract();
-		
+		mabr1.nike(new Brand());		
 	}
 }

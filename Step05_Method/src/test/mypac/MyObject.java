@@ -60,6 +60,9 @@ public class MyObject {
 	public void slayer(Coffee c) {
 		System.out.println("쪼로로로록");
 	}
+	public void nike(Brand b) {
+		System.out.println("nike shoes");
+	}
 }
 
 
