@@ -1,5 +1,6 @@
 package test.mypac;
 /*
+<<<<<<< HEAD
  * [ 생성자 ]
  * 
  * 1. 클래스명과 동일하다

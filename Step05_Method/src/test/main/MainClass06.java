@@ -10,6 +10,9 @@ public class MainClass06 {
 		
 		Messenger.getMessage();
 		
+		//Messenger 클래스의 static 메소드 3개를 하나씩 호출해 보세요.
+		Messenger.sendMessage("xxxx");
+		String a=Messenger.getMessage();
 		Messenger.useCar(new Car());
 	}
 }
