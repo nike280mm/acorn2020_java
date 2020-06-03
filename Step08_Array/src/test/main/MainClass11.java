@@ -11,7 +11,7 @@ public class MainClass11 {
 			System.out.print("종료(q) 계속(Enter):");
 			String str=scan.nextLine();
 			if(str.equals("q")) {//무한 루프 탈출 조건
-				break; //while  문 탈출
+				break; //while문 탈출
 			}
 			//이전 예제에서 작업한 내용을 static 메소드에 이동 시키고 해당 메소드 호출하기 
 			MainClass11.doGame();
