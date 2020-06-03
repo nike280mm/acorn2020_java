@@ -27,15 +27,19 @@ public class MainClass06 {
 //		add[3] = str4;
 //		add[4] = str5;
 		
+		Scanner scan = new Scanner(System.in);
 		String[] add = new String[5];
 		
 		for(int i= 0; i< add.length; i++) {
-			Scanner scan = new Scanner(System.in);
+			
 			System.out.println("문자 입력: ");
+			
 			String str = scan.nextLine();
+			
 			add[i] = str;	
 		}
 		for(int i= 0; i< add.length; i++) {
+			
 			System.out.println(add[i]);			
 		}
 		
@@ -49,14 +53,19 @@ public class MainClass06 {
 		int[] nums = new int[6];		
 				
 		for(int i= 0; i< nums.length; i++) {
+			
 			Random ran = new Random();
+			
 			int r = ran.nextInt(10)+(i*7);
+			
 			if(i>= 1 && nums[i-1] >= r ) {
+			
 				r = r + 3;
 			} 
 			nums[i] = r + 1;			
 		}
 		for(int i= 0; i< nums.length; i++) {
+			
 			System.out.println(nums[i]);
 		}
 	}
