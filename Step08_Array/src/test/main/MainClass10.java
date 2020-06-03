@@ -13,8 +13,7 @@ public class MainClass10 {
 			if(str.equals("q")) {// 무한루프 탈출 조건
 				break; // while문 탈출
 			}
-			System.out.println("무언가 작업 중...");
-			
+			// 이전 예제에서 작업한 내용을 static 메소드에 이동시키고 해당 메소드 호출하기
 			MainClass10.doGame();
 		}
 		System.out.println("main 메소드가 종료됩니다");
