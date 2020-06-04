@@ -18,5 +18,7 @@ public class MainClass01 {
 		// 이미 만들어진 객체의 참조값을 다른 type으로 받아보기
 		Phone p6 = p3;
 		Object p7 = p3;
+		
+		HandPhone p8 = (HandPhone)p7;
 	}
 }
