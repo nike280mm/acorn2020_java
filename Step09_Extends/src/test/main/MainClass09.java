@@ -16,6 +16,6 @@ public class MainClass09 {
 	}
 	
 	public static void useCar(Car car) {
-		car.doorLock();
+		car.doorLock();	
 	}
 }
