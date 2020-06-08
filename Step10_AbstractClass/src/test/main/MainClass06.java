@@ -32,6 +32,9 @@ public class MainClass06 {
 			public void attack() {
 				super.attack();
 			}
+			public void fly() {
+				System.out.println("난다");
+			}
 			@Override
 			public void launch() {
 				System.out.println("SLBM 발사");
