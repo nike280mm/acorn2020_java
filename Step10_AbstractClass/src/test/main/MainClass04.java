@@ -1,5 +1,6 @@
 package test.main;
 /*
+<<<<<<< HEAD
  * 	클래스 안에 만든 클래스 : inner class
  * 	메소드 안에 만든 클래스 : local inner class
  */
