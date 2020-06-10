@@ -6,6 +6,7 @@ import test.mypac.Zoo.Tiger;
 
 public class MainClass03 {
 	public static void main(String[] args) {
+<<<<<<< HEAD
 		// Zoo 클래스에 있는 getMonkey() 메소드를 호출해서
 		// 리턴되는 값을 m1 이라는 지역 변수에 담아 보세요.
 		Zoo z=new Zoo();
@@ -27,3 +28,17 @@ public class MainClass03 {
 
 
 
+=======
+		
+		Zoo z = new Zoo();
+		
+		Monkey m1 = z.getMonkey();
+		
+		Tiger t1 = z.getTiger();
+		
+		m1.say();
+		
+		t1.say();
+	}
+}
+>>>>>>> branch 'study' of https://github.com/nike280mm/acorn2020_java.git

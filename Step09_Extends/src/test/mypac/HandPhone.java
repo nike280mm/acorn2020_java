@@ -1,5 +1,6 @@
 package test.mypac;
 
+<<<<<<< HEAD
 // Phone 클래스를 상속 받은 HandPhone 클래스 
 public class HandPhone extends Phone{
 	//생성자
@@ -14,5 +15,19 @@ public class HandPhone extends Phone{
 	//사진 찍는 메소드 
 	public void takePicture() {
 		System.out.println("30만 화소의 사진을 찍어요");
+=======
+// Phone 클래스를 상속받은 handPhone 클래스
+public class HandPhone extends Phone {
+	// 생성자
+	public HandPhone() {
+		System.out.println("HandPhone() 생성자 호출됨");
+	}
+	// 메소드
+	public void mobileCall() {
+		System.out.println("통신보안");
+	}
+	public void takePicture() {
+		System.out.println("찰칵");
+>>>>>>> branch 'study' of https://github.com/nike280mm/acorn2020_java.git
 	}
 }

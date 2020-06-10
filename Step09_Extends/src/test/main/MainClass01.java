@@ -6,6 +6,7 @@ import test.mypac.Phone;
 public class MainClass01 {
 	public static void main(String[] args) {
 		
+<<<<<<< HEAD
 		//Phone 클래스로 객체 생성해서 참조값을 지역 변수에 담기 
 		Phone p1=new Phone();
 		Object p2=new Phone();
@@ -29,3 +30,21 @@ public class MainClass01 {
 
 
 
+=======
+		// Phone 클래스로 객체 생성해서 참조값을 지역변수에 담기
+		Phone p1 = new Phone();
+		Object p2 = new Phone();
+		
+		// HandPhone 클래스로 객체 생성해서 참조값을 지역변수에 담기
+		HandPhone p3 = new HandPhone();
+		Phone p4 = new HandPhone();
+		Object p5 = new HandPhone();
+		
+		// 이미 만들어진 객체의 참조값을 다른 type으로 받아보기
+		Phone p6 = p3;
+		Object p7 = p3;
+		
+		HandPhone p8 = (HandPhone)p7;
+	}
+}
+>>>>>>> branch 'study' of https://github.com/nike280mm/acorn2020_java.git

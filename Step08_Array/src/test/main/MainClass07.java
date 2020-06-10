@@ -4,6 +4,7 @@ import java.util.Random;
 
 public class MainClass07 {
 	public static void main(String[] args) {
+<<<<<<< HEAD
 		/*
 		 * 2. Random 객체를 이용해서 로또 번호를 6개 렌덤하게 얻어내서
 		 *    배열에 저장한다.
@@ -38,3 +39,31 @@ public class MainClass07 {
 
 
 
+=======
+		/* 2.
+		 * Random 객체를 이용해서 로또 번호를 6개 랜덤하게 얻어내서
+		 * 배열에 저장
+		 * 모두다 저장되면 for문을 이용해서 배열에 저장된 모든 로또번호를
+		 * 콘솔창에 순서대로 출력하는 코드를 작성
+		 */
+		
+		Random ran = new Random();
+
+		// lotto 번호를 저ㅏㅇ할 수 있는 방 6개 짜리 배열 객체 생성
+		int[] nums = new int[6];
+		
+		// 반복문 돌면서 로또번호 6개를 얻어낸다
+		for(int i= 0; i< 6; i++) {
+			int lottoNum = ran.nextInt(45)+1;
+			// 순서대로 저장하기
+			nums[i] = lottoNum;
+		}
+		for(int tmp: nums) {
+			System.out.println(tmp);			
+		}
+//		for(int i= 0; i< nums.length; i++) {
+//			int tmp = nums[i];
+//		}
+	}
+}
+>>>>>>> branch 'study' of https://github.com/nike280mm/acorn2020_java.git
