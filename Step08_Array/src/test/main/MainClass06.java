@@ -1,4 +1,4 @@
-package test.main;
+	package test.main;
 
 import java.util.Arrays;
 import java.util.Random;

@@ -38,7 +38,6 @@ public class MainClass11 {
 				// 실행의 흐름(스레드)을 1초 잡아 놓기 
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			//.print() 메소드를 이용해서 개행 기호를 출력하지 않는다

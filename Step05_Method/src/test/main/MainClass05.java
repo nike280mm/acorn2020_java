@@ -22,7 +22,6 @@ public class MainClass05 {
 		 * 클래스를 정의하고
 		 * 그 클래스를 이용해서 객체도 생성하고 메소드도 호출해보기
 		 */
-		
 		maco1.extract();
 		mabr1.nike(new Brand());		
 	}

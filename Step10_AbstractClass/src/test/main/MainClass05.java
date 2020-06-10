@@ -6,7 +6,7 @@ public class MainClass05 {
 	public static String yourName = "ㅇㅇ";
 
 	public static void main(String[] args) {
-		// statis 메소드 안에서 this는 의미도 없고 사용 불가
+		// static 메소드 안에서 this는 의미도 없고 사용 불가
 		//System.out.println(this.myName);
 		
 		// myName이라는 필드는 non static 이므로 클래스명 . 으로 접근 불가

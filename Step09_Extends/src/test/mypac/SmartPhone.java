@@ -11,7 +11,6 @@ public class SmartPhone extends HandPhone {
 	// Override는 부모의 메소드를 재정의한 메소드라고 표시해주는 어노테이션
 	@Override
 	public void takePicture() {
-		// TODO Auto-generated method stub
 		//super.takePicture();
 		System.out.println("1조 화소로 찰칵");
 	}
