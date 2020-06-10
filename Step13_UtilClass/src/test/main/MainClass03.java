@@ -1,12 +1,5 @@
 package test.main;
 
-<<<<<<< HEAD
-public class MainClass03 {
-	public static void main(String[] args) {
-		//String type  을 저장할 ArrayList 객체 생성하고 
-		//참조값을 List 인터페이스 type 지역변수 msgs 에 담기
-		
-=======
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,6 +27,5 @@ public class MainClass03 {
 		for(String tmp : msgs) {
 			System.out.println(tmp);
 		}
->>>>>>> branch 'study' of https://github.com/nike280mm/acorn2020_java.git
 	}
 }
