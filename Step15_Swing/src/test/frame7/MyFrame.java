@@ -12,8 +12,6 @@ import javax.swing.JTextField;
 public class MyFrame extends JFrame implements ActionListener{
 	
 	JTextField inputMsg;
-	JButton sendBtn;
-	String a;
 	
 	// default 생성자
 	public MyFrame() {
@@ -21,10 +19,9 @@ public class MyFrame extends JFrame implements ActionListener{
 		// 문자열 한 줄을 입력할 수 있는 JTextField
 		JTextField inputMsg = new JTextField(10);
 		add(inputMsg);
-		String a = inputMsg.getText();
+
 		JButton sendBtn = new JButton("전송");
 		sendBtn.addActionListener(this);
-		sendBtn.getActionCommand();
 		add(sendBtn);
 	}
 	
@@ -41,6 +38,7 @@ public class MyFrame extends JFrame implements ActionListener{
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		String a = inputMsg.getText();
 		JOptionPane.showMessageDialog(this, a);
 	}
 }
