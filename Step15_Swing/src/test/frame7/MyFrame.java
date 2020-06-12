@@ -17,7 +17,7 @@ public class MyFrame extends JFrame implements ActionListener{
 	public MyFrame() {
 		setLayout(new FlowLayout());
 		// 문자열 한 줄을 입력할 수 있는 JTextField
-		JTextField inputMsg = new JTextField(10);
+		inputMsg = new JTextField(10);
 		add(inputMsg);
 
 		JButton sendBtn = new JButton("전송");
@@ -38,7 +38,7 @@ public class MyFrame extends JFrame implements ActionListener{
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		String a = inputMsg.getText();
-		JOptionPane.showMessageDialog(this, a);
+		String text = inputMsg.getText();
+		JOptionPane.showMessageDialog(this, text);
 	}
 }
