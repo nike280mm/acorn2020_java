@@ -3,6 +3,7 @@ package test.frame10;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
@@ -81,24 +82,30 @@ public class MyFrame extends JFrame implements ActionListener{
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		// JTextField에 입력한 문자열을 읽어와서 숫자(실수)로 바꿔준다
-		double num1 = Double.parseDouble(tf_num1.getText());
-		double num2 = Double.parseDouble(tf_num2.getText());
-		// 연ㅅㄴ의 결과값을 담을 지역 변수
-		double result = 0;
-		// 눌러진 버튼의 command 읽어오기
-		String command = e.getActionCommand();
-		
-		if(command.equals("plus")) {
-			result = num1 + num2;
-		}else if(command.equals("minus")) {
-			result = num1 - num2;
-		}else if(command.equals("multi")) {
-			result = num1 * num2;
-		}else if(command.equals("divide")) {
-			result = num1 / num2;
+		try {
+			// JTextField에 입력한 문자열을 읽어와서 숫자(실수)로 바꿔준다
+			double num1 = Double.parseDouble(tf_num1.getText());
+			double num2 = Double.parseDouble(tf_num2.getText());
+			// 연ㅅㄴ의 결과값을 담을 지역 변수
+			double result = 0;
+			// 눌러진 버튼의 command 읽어오기
+			String command = e.getActionCommand();
+			
+			if(command.equals("plus")) {
+				result = num1 + num2;
+			}else if(command.equals("minus")) {
+				result = num1 - num2;
+			}else if(command.equals("multi")) {
+				result = num1 * num2;
+			}else if(command.equals("divide")) {
+				result = num1 / num2;
+			}
+			// 결과값을 JLable에 출력하기
+			label_result.setText(Double.toString(result));
+		}catch (Exception exe) {
+			JOptionPane.showMessageDialog(this, "숫자를 입력합시다");	
+			tf_num1.setText("");
+			tf_num2.setText("");
 		}
-		// 결과값을 JLable에 출력하기
-		label_result.setText(Double.toString(result));
 	}
 }
