@@ -4,7 +4,13 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
 
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -19,6 +25,12 @@ import javax.swing.plaf.metal.MetalLookAndFeel;
 import javax.swing.plaf.metal.OceanTheme;
 
 public class Quiz03 extends JFrame implements ActionListener{
+	
+	FileReader fr = null;
+	BufferedReader br = null;
+	
+	JTextArea area;
+	
 	// 생성자
 	public Quiz03() {
 		
@@ -50,7 +62,7 @@ public class Quiz03 extends JFrame implements ActionListener{
 		setJMenuBar(mb);
 		
 		// 텍스트 area를 프레임의 가운데에 배치
-		JTextArea area = new JTextArea();
+		area = new JTextArea();
 		add(area, BorderLayout.CENTER);
 		area.setBackground(Color.GREEN);
 		area.setVisible(false);
@@ -61,6 +73,18 @@ public class Quiz03 extends JFrame implements ActionListener{
 		f.setBounds(100, 100, 500, 500);
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		f.setVisible(true);
+	}
+	
+	public void New() {
+		
+	}
+	
+	public void Open() {
+		
+	}
+	
+	public void Save() {
+		
 	}
 
 	@Override
