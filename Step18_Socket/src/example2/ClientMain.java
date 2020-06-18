@@ -1,6 +1,7 @@
 package example2;
 
 import java.io.OutputStream;
+
 import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.util.Scanner;
