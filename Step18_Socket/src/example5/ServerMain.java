@@ -12,6 +12,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 public class ServerMain {
@@ -111,7 +112,13 @@ public class ServerMain {
 			}finally {
 				// 접속이 끊겨서 종료되는 스레드는 List에서 제거한다
 				threadList.remove(this);
+				// this가 퇴장한다고 메시지를 보낸다
 				try {
+					JSONObject jsonObj = new JSONObject();
+					jsonObj.put("type", "out");
+					jsonObj.put("name", this.chatName);
+					sendMessage(jsonObj.toString());
+
 					if(socket != null)socket.close();
 				}catch (Exception e) {}
 			}

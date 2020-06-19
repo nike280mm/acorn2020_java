@@ -2,8 +2,6 @@ package example5;
 
 import java.awt.BorderLayout;
 
-
-
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -18,15 +16,18 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.util.Scanner;
+import java.util.Vector;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 //import jdk.nashorn.internal.runtime.JSONFunctions;
@@ -56,7 +57,7 @@ import org.json.JSONObject;
  * 	메세지의 종류
  * 	
  * 	1. 일반 대화 메시지 
- * 	   {"type": "msg", "name": "김구라", "txt": "ㅎㅇ"}
+ * 	   {"type": "msg", "name": "김구라", "content": "ㅎㅇ"}
  * 	2. 누군가 입장했다는 메시지
  * 	   {"type": "enter", "name": "김구라"}
  * 	3. 누군가 퇴장했다는 메시지
@@ -135,7 +136,7 @@ public class ClientMain extends JFrame implements ActionListener, KeyListener{
 		// 배경색
 		area.setBackground(Color.pink);
 		// 프레임의 가운데에 배치하기
-		add(area, BorderLayout.CENTER);
+		//add(area, BorderLayout.CENTER);
 		// 스크롤 가능하도록
 		JScrollPane scroll = new JScrollPane(area,
 				JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
@@ -145,6 +146,19 @@ public class ClientMain extends JFrame implements ActionListener, KeyListener{
 		// 엔터키로 메시지 전송
 		tf_msg.addKeyListener(this);
 		
+		// Vector는 ArrayList와 같다고 생각하고 사용해야 한다
+		// 추가 기능(스레드 동기화)가 있어서 조금 더 무겁다
+		Vector<String> vec = new Vector<>();
+		vec.add("김구라");
+		vec.add("해골");
+		vec.add("원숭이");
+		
+		JList<String> jList = new JList<String>(vec);
+		jList.setBackground(Color.DARK_GRAY);
+		
+		JPanel leftPanel = new JPanel();
+		leftPanel.add(jList);
+		add(leftPanel, BorderLayout.EAST);
 	}// 생성자
 	
 	public static void main(String[] args) {
@@ -170,7 +184,7 @@ public class ClientMain extends JFrame implements ActionListener, KeyListener{
 			JSONObject jsonObj = new JSONObject();
 			jsonObj.put("type", "msg");
 			jsonObj.put("name", chatName);
-			jsonObj.put("txt", msg);
+			jsonObj.put("content", msg);
 			//JSON 문자열을 읽어낸다
 			String json = jsonObj.toString();
 			
@@ -197,23 +211,8 @@ public class ClientMain extends JFrame implements ActionListener, KeyListener{
 				while(true) {
 					// 서버로부터 문자열이 전송되는지 대기한다
 					String msg = br.readLine();
-					JSONObject jsonObj = new JSONObject(msg);
-					String type = jsonObj.getString("type");
-					if(type.equals("enter")) {// 입장 메시지라면
-						// 누가 입장했는지 읽어낸다
-						String name = jsonObj.getString("name");
-						area.append("["+name+"]님이 입장했습니다");
-						area.append("\r\n");
-					}else if(type.equals("msg")) {// 대화 메시지라면
-						// 누가
-						String name = jsonObj.getString("name");
-						// 어떤 내용을
-						String txt = jsonObj.getString("txt");
-						// 출력하기
-						area.append(name + ": " + txt);
-						area.append("\r\n");
-					}
-					
+					// 메소드를 호출하면서 문자열 전달
+					updateTextArea(msg);
 					// 최근 추가된 글 내용이 보일 수 있도록
 					int docLength = area.getDocument().getLength();
 					area.setCaretPosition(docLength);
@@ -224,8 +223,41 @@ public class ClientMain extends JFrame implements ActionListener, KeyListener{
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
+		}// run()
+		
+		// JTextArea에 문자열을 출력하는 메소드
+		public void updateTextArea(String msg) {
+			try {
+				JSONObject jsonObj = new JSONObject(msg);
+				String type = jsonObj.getString("type");
+				if(type.equals("enter")) {// 입장 메시지라면
+					// 누가 입장했는지 읽어낸다
+					String name = jsonObj.getString("name");
+					area.append("["+name+"]님이 입장했습니다");
+					area.append("\r\n");
+				}else if(type.equals("msg")) {// 대화 메시지라면
+					// 누가
+					String name = jsonObj.getString("name");
+					// 어떤 내용을
+					String content = jsonObj.getString("content");
+					// 출력하기
+					area.append(name + ": " + content);
+					area.append("\r\n");
+				}else if(type.equals("out")) {
+					// 누가
+					String name = jsonObj.getString("name");
+					// 출력하기
+					area.append("[[ "+name+" ]]이 나갔습니다");
+					area.append("\r\n");
+				}
+			}catch (JSONException je) {
+				je.printStackTrace();
+			}
+			
 		}
-	}
+		
+	}// class Client Thread
+	
 	@Override
 	public void keyPressed(KeyEvent e) {
 		int code = e.getKeyCode();
