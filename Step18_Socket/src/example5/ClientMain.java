@@ -3,6 +3,7 @@ package example5;
 import java.awt.BorderLayout;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -27,6 +28,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -67,7 +69,8 @@ import org.json.JSONObject;
  * 
  */
 
-public class ClientMain extends JFrame implements ActionListener, KeyListener{
+public class ClientMain extends JFrame 
+						implements ActionListener, KeyListener{
 	// 필드
 	JTextField tf_msg;
 	// 서버와 연결된 Socket 객체의 참조값을 담을 필드
@@ -76,39 +79,11 @@ public class ClientMain extends JFrame implements ActionListener, KeyListener{
 	JTextArea area;
 	// 대화명
 	String chatName;
+	// JList
+	JList<String> jList;
 	
 	// 생성자
 	public ClientMain() {
-		// 대화명을 입력 받아서 필드에 저장한다
-		chatName = JOptionPane.showInputDialog(this, "대화명을 입력하세요");
-		setTitle("대화명: " + chatName);
-		
-		// 서버에 소켓 접속을 한다
-		try {
-			// 접속이 성공되면 Socket 객체의 참조값이 반환된다
-			// 반환되는 객체의 참조값을 필드에 저장해 놓는다
-			socket = new Socket("192.168.0.30", 5000);
-			// 서버에 문자열을 출력할 BufferedWriter 객체의 참조값을 얻어내서 필드에 저장해 놓는다
-			OutputStream os = socket.getOutputStream();
-			OutputStreamWriter osw = new OutputStreamWriter(os);
-			bw = new BufferedWriter(osw);
-			// 서버로부터 메세지를 받을 스레드도 시작을 시킨다
-			new ClientThread().start();
-			
-			// 내가 입장한다고 서버에 메시지를 보낸다
-			// "{"type": "enter", "name": "대화명"}"
-			JSONObject jsonobj = new JSONObject();
-			jsonobj.put("type", "enter");
-			jsonobj.put("name", chatName);
-			String msg = jsonobj.toString();
-			// BufferedWriter 객체를 이용해서 보내기
-			bw.write(msg);
-			bw.newLine();
-			bw.flush();
-		}catch (Exception e) {// 접속이 실패하면 예외가 발생한다
-			e.printStackTrace();
-		}
-		
 		
 		// 레이아웃을 BorderLayout으로 지정하기
 		setLayout(new BorderLayout());
@@ -146,19 +121,48 @@ public class ClientMain extends JFrame implements ActionListener, KeyListener{
 		// 엔터키로 메시지 전송
 		tf_msg.addKeyListener(this);
 		
-		// Vector는 ArrayList와 같다고 생각하고 사용해야 한다
-		// 추가 기능(스레드 동기화)가 있어서 조금 더 무겁다
-		Vector<String> vec = new Vector<>();
-		vec.add("김구라");
-		vec.add("해골");
-		vec.add("원숭이");
+		// String[]에 JList 공간 확보를 위해 임시 문자열을 넣는다
+		String[] title = {"참여자 목록"};
+		jList = new JList<String>(title);
+		jList.setBackground(Color.GRAY);
 		
-		JList<String> jList = new JList<String>(vec);
-		jList.setBackground(Color.DARK_GRAY);
+		// 패널에 JList를 배치하고
+		JPanel rightPanel = new JPanel();
+		rightPanel.add(jList);
+		// 패널을 프레임의 오른쪽에 배치
+		add(rightPanel, BorderLayout.EAST);
 		
-		JPanel leftPanel = new JPanel();
-		leftPanel.add(jList);
-		add(leftPanel, BorderLayout.EAST);
+		// 대화명을 입력 받아서 필드에 저장한다
+		chatName = JOptionPane.showInputDialog(this, "대화명을 입력하세요");
+		
+		setTitle("대화명: " + chatName);
+		
+		// 서버에 소켓 접속을 한다
+		try {
+			// 접속이 성공되면 Socket 객체의 참조값이 반환된다
+			// 반환되는 객체의 참조값을 필드에 저장해 놓는다
+			socket = new Socket("192.168.0.30", 5000);
+			// 서버에 문자열을 출력할 BufferedWriter 객체의 참조값을 얻어내서 필드에 저장해 놓는다
+			OutputStream os = socket.getOutputStream();
+			OutputStreamWriter osw = new OutputStreamWriter(os);
+			bw = new BufferedWriter(osw);
+			// 서버로부터 메세지를 받을 스레드도 시작을 시킨다
+			new ClientThread().start();
+			
+			// 내가 입장한다고 서버에 메시지를 보낸다
+			// "{"type": "enter", "name": "대화명"}"
+			JSONObject jsonobj = new JSONObject();
+			jsonobj.put("type", "enter");
+			jsonobj.put("name", chatName);
+			String msg = jsonobj.toString();
+			// BufferedWriter 객체를 이용해서 보내기
+			bw.write(msg);
+			bw.newLine();
+			bw.flush();
+		}catch (Exception e) {// 접속이 실패하면 예외가 발생한다
+			e.printStackTrace();
+		}
+		
 	}// 생성자
 	
 	public static void main(String[] args) {
@@ -249,6 +253,19 @@ public class ClientMain extends JFrame implements ActionListener, KeyListener{
 					// 출력하기
 					area.append("[[ "+name+" ]]이 나갔습니다");
 					area.append("\r\n");
+				}else if(type.equals("members")) {
+					// list라는 키값으로 저장된 JSONArray객체를 얻어온다
+					JSONArray arr = jsonObj.getJSONArray("list");
+					// 참여자 목록을 저장할 Vector
+					Vector<String> list = new Vector<>();
+					list.add("참여자 목록");
+					// 반복문 돌면서 참여자 목록을 다시 넣어준다
+					for(int i= 0; i< arr.length(); i++) {
+						String tmp = arr.getString(i);
+						list.add(tmp);
+					}
+					// JList에 참여자 목록 연결하기
+					jList.setListData(list);
 				}
 			}catch (JSONException je) {
 				je.printStackTrace();
