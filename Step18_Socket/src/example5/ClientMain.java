@@ -33,16 +33,36 @@ import org.json.JSONObject;
 //import netscape.javascript.JSObject;
 
 /*
+ * 	JSON
+ * 	
+ * 	- Java Script Object Notation (자바스크립트 객체 표기법을 따르는 문자열)
+ * 
+ * 	- 데이터의 type
+ * 	1. {}
+ * 	2. []
+ * 	3. ""
+ * 	4. 10 or 10.1
+ * 	5. true or false
+ * 	6. null
+ * 
+ * 	- JSON 예제
+ * 	
+ * 	{"num": 1, "name": "김구라", "isMan": true, "phone": null}
+ * 	[10, 20, 30, 40, 50]
+ * 	["김구라", "해골", "원숭이"]
+ * 	[{}, {}, {}]
+ * 	{"name": "kim", "friends": ["김구라", "해골", "원숭이"]}
+ * 
  * 	메세지의 종류
  * 	
  * 	1. 일반 대화 메시지 
- * 	   {"name": "김구라", "msg": "하이루"}
+ * 	   {"type": "msg", "name": "김구라", "txt": "ㅎㅇ"}
  * 	2. 누군가 입장했다는 메시지
- * 	   {"enter": "김구라"}
+ * 	   {"type": "enter", "name": "김구라"}
  * 	3. 누군가 퇴장했다는 메시지
- * 	   {"out": "김구라"}
+ * 	   {"type": "out", "name": "김구라"}
  * 	4. 참여자 목록 메세지
- * 	   {"members": ["김구라", "해골", "원숭이"]}	
+ * 	   {"type": "members", "list": ["김구라", "해골", "원숭이"]}	
  * 
  */
 
@@ -71,19 +91,21 @@ public class ClientMain extends JFrame implements ActionListener, KeyListener{
 			OutputStream os = socket.getOutputStream();
 			OutputStreamWriter osw = new OutputStreamWriter(os);
 			bw = new BufferedWriter(osw);
+			// 서버로부터 메세지를 받을 스레드도 시작을 시킨다
+			new ClientThread().start();
+			
 			// 내가 입장한다고 서버에 메시지를 보낸다
-			// "{"enter" : "해골"}"
+			// "{"type": "enter", "name": "대화명"}"
 			String msg = "{\"enter\": \""+chatName+"\"}";
 			
 			JSONObject jsonobj = new JSONObject();
-			jsonobj.put("enter", chatName);
+			jsonobj.put("type", "enter");
+			jsonobj.put("name", chatName);
 			String msg2 = jsonobj.toString();
 			// BufferedWriter 객체를 이용해서 보내기
 			bw.write(msg);
 			bw.newLine();
-			
-			// 서버로부터 메세지를 받을 스레드도 시작을 시킨다
-			new ClientThread().start();
+			bw.flush();
 		}catch (Exception e) {// 접속이 실패하면 예외가 발생한다
 			e.printStackTrace();
 		}
@@ -147,8 +169,15 @@ public class ClientMain extends JFrame implements ActionListener, KeyListener{
 		// 전송할 문자열
 		String msg = tf_msg.getText();
 		try {
-			// 문자열을 서버에 전송(출력 output) 하기			
-			bw.write(chatName +": "+msg);
+			JSONObject jsonObj = new JSONObject();
+			jsonObj.put("type", "msg");
+			jsonObj.put("name", chatName);
+			jsonObj.put("txt", msg);
+			//JSON 문자열을 읽어낸다
+			String json = jsonObj.toString();
+			
+			// 문자열을 서버에 전송(출력 output) 하기
+			bw.write(json);
 			bw.newLine();
 			bw.flush();
 			tf_msg.setText("");
@@ -170,6 +199,23 @@ public class ClientMain extends JFrame implements ActionListener, KeyListener{
 				while(true) {
 					// 서버로부터 문자열이 전송되는지 대기한다
 					String msg = br.readLine();
+					JSONObject jsonObj = new JSONObject(msg);
+					String type = jsonObj.getString("type");
+					if(type.equals("enter")) {// 입장 메시지라면
+						// 누가 입장했는지 읽어낸다
+						String name = jsonObj.getString("name");
+						area.append("["+name+"]님이 입장했습니다");
+						area.append("\r\n");
+					}else if(type.equals("msg")) {// 대화 메시지라면
+						// 누가
+						String name = jsonObj.getString("name");
+						// 어떤 내용을
+						String txt = jsonObj.getString("txt");
+						// 출력하기
+						area.append(name + ": " + txt);
+						area.append("\r\n");
+					}
+					
 					// JTextArea에 출력하기
 					area.append(msg);
 					area.append("\r\n");

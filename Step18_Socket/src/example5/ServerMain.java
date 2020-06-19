@@ -12,6 +12,8 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.json.JSONObject;
+
 public class ServerMain {
 	// static 필드
 	static List<ServerThread> threadList = new ArrayList<>();
@@ -22,16 +24,9 @@ public class ServerMain {
 		try {
 			// 5000번 통신 port를 열고 클라이언트의 접속을 기다린다
 			serverSocket = new ServerSocket(5000);
-			System.out.println("클라이언트의 Socket 연결 요청을 대기");
-			/*
-			 * 	accept() 메소드는 클라이언트가 실제 접속을 할 때까지 리턴하지 않고
-			 * 	블록킹 되는 메소드이다
-			 * 	클라이언트가 접속을 해오면 Socket 객체의 참조값을 반환하면서 리턴된다
-			 */
 			while(true) {
-				System.out.println("클라이언트의 Socket 연결 요청을 대기");
+				// 클라이언트의 소켓 접속을 기다린다
 				Socket socket = serverSocket.accept();
-				System.out.println("클라이언트가 접속했습니다");
 				// 방금 접속한 클라이언트를 응대할 스레드를 시작한다
 				ServerThread thread = new ServerThread(socket);
 				thread.start();
@@ -55,6 +50,8 @@ public class ServerMain {
 		Socket socket;
 		// 클라이언트에게 출력할 문자열을 
 		BufferedWriter bw;
+		// 클라이언트의 대화명을 저장할 필드
+		String chatName;
 		
 		// 생성자의 인자로 Socket 객체를 전달 받도록 한다
 		public ServerThread(Socket socket) {
@@ -89,17 +86,20 @@ public class ServerMain {
 				bw = new BufferedWriter(osw);
 				
 				while(true) {
-					/*
-					 * 	클라이언트가 문자열을 한 줄 (개행기호와 함께) 보내면
-					 * 	readLine() 메소드가 리턴하면서 보낸 문자열을 가지고 온다
-					 * 	보내지 않으면 게속 블로킹 돼서 대기하고 있다가
-					 * 	접속이 끊기면 Exception이 발생하거나 null이 리턴 된다
-					 * 	따라서, null이 리턴되면 반복문을 빠져나가게 break문을 만나도록 한다
-					 * 	실행순서가 try블럭을 벗어나면 run() 메소드가 리턴되고
-					 * 	run() 메소드가 리터되면 해당 스레드는 종료된다
-					 */
+					// 클라이언트가 전송하는 문자열을 읽어낸다
 					String msg = br.readLine();
-					System.out.println("메세지: " + msg);
+					// 전송된 JSON 문자열을 사용할 준비를 한다
+					JSONObject jsonObj = new JSONObject(msg);
+					// type을 읽어낸다
+					String type = jsonObj.getString("type");
+					if(type.equals("enter")) {
+						// 현재 스레드가 대응하는 클라이언트의 대화명을 필드에 저장
+						String chatName = jsonObj.getString("name");
+						this.chatName = chatName;
+					}else if(type.equals("msg")) {
+						
+					}
+					
 					// 클라이언트에게 동일한 메세지를 보내는 메소드를 호출한다
 					sendMessage(msg);
 					if(msg == null) {// 클라이언트의 접속이 끊겼기 때문에
