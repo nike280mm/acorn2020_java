@@ -96,12 +96,10 @@ public class ClientMain extends JFrame implements ActionListener, KeyListener{
 			
 			// 내가 입장한다고 서버에 메시지를 보낸다
 			// "{"type": "enter", "name": "대화명"}"
-			String msg = "{\"enter\": \""+chatName+"\"}";
-			
 			JSONObject jsonobj = new JSONObject();
 			jsonobj.put("type", "enter");
 			jsonobj.put("name", chatName);
-			String msg2 = jsonobj.toString();
+			String msg = jsonobj.toString();
 			// BufferedWriter 객체를 이용해서 보내기
 			bw.write(msg);
 			bw.newLine();
@@ -216,9 +214,6 @@ public class ClientMain extends JFrame implements ActionListener, KeyListener{
 						area.append("\r\n");
 					}
 					
-					// JTextArea에 출력하기
-					area.append(msg);
-					area.append("\r\n");
 					// 최근 추가된 글 내용이 보일 수 있도록
 					int docLength = area.getDocument().getLength();
 					area.setCaretPosition(docLength);
