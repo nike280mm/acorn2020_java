@@ -13,8 +13,8 @@ public class Quiz01 {
 		 * 	해당 파일에 저장하기
 		 */
 		File quizFile = new File("c:/acorn2020/myFolder/quiz.txt");
-		System.out.println("입력할 문장: ");
 		Scanner scan = new Scanner(System.in);
+		System.out.println("입력할 문장: ");
 		String txt = scan.nextLine();
 		try {
 			boolean isExist = quizFile.exists();

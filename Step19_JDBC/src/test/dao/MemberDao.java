@@ -1,10 +1,12 @@
 package test.dao;
 
 import java.sql.Connection;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 import java.util.Vector;
 
 import test.util.DBConnect;
@@ -114,14 +116,24 @@ public class MemberDao {
 	public void delete(int num) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
+		ResultSet rs = null;
 		try {
 			conn = new DBConnect().getConn();
-			String sql = "DELETE FROM member"
-						+ " WHERE num = ?";
+			String sql = "SELECT name, addr FROM member"
+					+ " WHERE num = ?";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, num);
-			pstmt.executeUpdate();
-			System.out.println("회원 정보를 삭제했습니다");
+			rs = pstmt.executeQuery();
+			if(rs.next()) {
+				String sql2 = "DELETE FROM member"
+						+ " WHERE num = ?";
+				pstmt = conn.prepareStatement(sql2);
+				pstmt.setInt(1, num);
+				pstmt.executeUpdate();
+				System.out.println("회원 정보를 삭제했습니다");
+			}else {
+				System.out.println("삭제할 정보가 없습니다");
+			}
 		}catch (Exception e) {
 			e.printStackTrace();
 		}finally {
@@ -135,11 +147,25 @@ public class MemberDao {
 	public void insert(MemberDto dto) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
+		
+		dto = new MemberDto();
+		
+		Scanner scan_name = new Scanner(System.in);
+		System.out.println("name: ");
+		String name = scan_name.nextLine();
+		
+		Scanner scan_addr = new Scanner(System.in);
+		System.out.println("addr: ");
+		String addr = scan_addr.nextLine();
+		
+		dto.setName(name);
+		dto.setAddr(addr);
+		
 		try {
 			conn = new DBConnect().getConn();
 			String sql = "INSERT INTO member" 
 						+" (num, name, addr)"
-						+" VALUES(member_seq.NEXTVAL, ?, ?)";
+						+" VALUES(5, ?, ?)";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, dto.getName());
 			pstmt.setString(2, dto.getAddr());
