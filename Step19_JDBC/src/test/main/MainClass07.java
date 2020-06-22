@@ -20,6 +20,7 @@ public class MainClass07 {
 		
 		// 회원 목록을 담을 객체 생성
 		List<MemberDto> list = new ArrayList<>();
+		
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -44,15 +45,26 @@ public class MainClass07 {
 				dto.setAddr(addr);
 				// MemberDto 객체를 List에 누적 시킨다
 				list.add(dto);
-				System.out.println(num + " | " + name + " | " + addr);
 			}
 		}catch (Exception e) {
 			e.printStackTrace();
 		}finally {
 			try {
+				// 객체를 생성했던 순서의 역순으로 닫는다
+				if(rs != null)rs.close();
 				if(pstmt != null)pstmt.close();
 				if(conn != null)conn.close();
 			}catch (Exception e) {}
+		}
+		
+		// 아래의 static 메소드 호출하기
+		printMember(list);
+	}// main()
+	
+	// 회원목록을 콘솔창에 출력해주는 메소드
+	public static void printMember(List<MemberDto> list) {
+		for(MemberDto tmp : list) {
+			System.out.println(tmp.getNum() + " | " + tmp.getName() + " | " + tmp.getAddr());
 		}
 	}
 }
