@@ -143,7 +143,7 @@ public class MemberDao {
 //				System.out.println("삭제할 정보가 없습니다");
 //			}
 			conn = new DBConnect().getConn();
-			String sql = "SELECT name, addr FROM member"
+			String sql = "DELETE FROM member"
 					+ " WHERE num = ?";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, num);
@@ -168,18 +168,18 @@ public class MemberDao {
 		PreparedStatement pstmt = null;
 		int flag = 0;
 		
-		dto = new MemberDto();
-		
-		Scanner scan_name = new Scanner(System.in);
-		System.out.println("name: ");
-		String name = scan_name.nextLine();
-		
-		Scanner scan_addr = new Scanner(System.in);
-		System.out.println("addr: ");
-		String addr = scan_addr.nextLine();
-		
-		dto.setName(name);
-		dto.setAddr(addr);
+//		dto = new MemberDto();
+//		
+//		Scanner scan_name = new Scanner(System.in);
+//		System.out.println("name: ");
+//		String name = scan_name.nextLine();
+//		
+//		Scanner scan_addr = new Scanner(System.in);
+//		System.out.println("addr: ");
+//		String addr = scan_addr.nextLine();
+//		
+//		dto.setName(name);
+//		dto.setAddr(addr);
 		
 		try {
 			conn = new DBConnect().getConn();
