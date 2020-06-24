@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import test.util.DBConnect;
-import test.util.MemoDto;
+import test.util.TodoDto;
 
 /*
  *  DAO (Data Access Object)
@@ -19,40 +19,40 @@ import test.util.MemoDto;
  *  4. 나머지 기능(select, insert, update, delete)들은 non static으로 만듬
  *  
  */
-public class MemoDao {
+public class TodoDao {
 	// 자신의 참조값을 지정할 private 필드
-	private static MemoDao dao;
+	private static TodoDao dao;
 	
 	// 외부에서 객체 생성하지 못하도록 한다
-	private MemoDao() {}
+	private TodoDao() {}
 	
 	// 참조값을 리턴해주는 메소드
-	public static MemoDao getInstance() {
+	public static TodoDao getInstance() {
 		if(dao == null) {// 최초 호출되면 null이므로
-			dao = new MemoDao(); // 객체를 생성해서 static 필드에 담는다
+			dao = new TodoDao(); // 객체를 생성해서 static 필드에 담는다
 		}
 		return dao;
 	}
 	
 	// 회원 한 명의 정보를 리턴해주는 메소드
-	public MemoDto getData(int num) {
+	public TodoDto getData(int num) {
 		
-		MemoDto dto = null;
+		TodoDto dto = null;
 		
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		try {
 			conn = new DBConnect().getConn();
-			String sql = "SELECT content, regdate FROM memo"
+			String sql = "SELECT todo, till FROM todo"
 						+ " WHERE num = ?";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, num);
 			rs = pstmt.executeQuery();
 			
 			if(rs.next()) {
-				dto = new MemoDto(num, rs.getString("content"), rs.getString("regdate"));
-				System.out.println(num + " | " + rs.getString("content") + " | " + rs.getString("regdate"));
+				dto = new TodoDto(num, rs.getString("todo"), rs.getString("till"));
+				System.out.println(num + " | " + rs.getString("todo") + " | " + rs.getString("till"));
 				System.out.println("내용을 뽑았습니다");
 			}else {
 				System.out.println(num + "번의 내용이 없습니다");
@@ -69,8 +69,8 @@ public class MemoDao {
 	}
 	
 	// 메모 목록을 리턴해주는 메소드
-	public List<MemoDto> getList(){
-		List<MemoDto> list = new ArrayList<>();
+	public List<TodoDto> getList(){
+		List<TodoDto> list = new ArrayList<>();
 		
 		Connection conn = null;
 		PreparedStatement pstmt = null;
@@ -78,16 +78,16 @@ public class MemoDao {
 		try {
 			conn = new DBConnect().getConn();
 			
-			String sql = "SELECT num, content, TO_CHAR(SYSDATE, 'YY.MM.DD AM HH:MI:SS') regdate FROM memo"
+			String sql = "SELECT num, todo, TO_CHAR(SYSDATE, 'YY.MM.DD AM HH:MI:SS') till FROM todo"
 						+ " ORDER BY num ASC";
 			pstmt = conn.prepareStatement(sql);
 			rs = pstmt.executeQuery();
 			while(rs.next()) {
 				int num = rs.getInt("num");
-				String content = rs.getString("content");
-				String regdate = rs.getString("regdate");
+				String todo = rs.getString("todo");
+				String till = rs.getString("till");
 				
-				MemoDto dto = new MemoDto(num, content, regdate);
+				TodoDto dto = new TodoDto(num, todo, till);
 				list.add(dto);
 			}
 			System.out.println("메모를 불러왔습니다");
@@ -103,7 +103,7 @@ public class MemoDao {
 		return list;
 	}
 	
-	public boolean insert(MemoDto dto) {
+	public boolean insert(TodoDto dto) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		int flag = 0;
@@ -111,11 +111,11 @@ public class MemoDao {
 		try {
 			conn = new DBConnect().getConn();
 			
-			String sql = "INSERT INTO memo"
-						+ " (num, content, regdate)"
-						+ " VALUES(memo_seq.NEXTVAL, ?, SYSDATE)";
+			String sql = "INSERT INTO todo"
+						+ " (num, todo, till)"
+						+ " VALUES(todo_seq.NEXTVAL, ?, SYSDATE)";
 			pstmt = conn.prepareStatement(sql);
-			pstmt.setString(1, dto.getContent());
+			pstmt.setString(1, dto.getTodo());
 			// sql문을 수행하고 변환된 row의 갯수를 리턴 받는다 (리턴값: 1)
 			flag = pstmt.executeUpdate();
 			System.out.println("메모를 추가했습니다");
@@ -134,20 +134,19 @@ public class MemoDao {
 		}
 	}
 	
-	public boolean update(MemoDto dto) {
+	public boolean update(TodoDto dto) {
 		
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		int flag = 0;
 		try {
 			conn = new DBConnect().getConn();
-			String sql = "UPDATE memo"
-						+ " SET content = ?, regdate = ?"
+			String sql = "UPDATE todo"
+						+ " SET todo = ?, SYSDATE"
 						+ " WHERE num = ?";
 			pstmt = conn.prepareStatement(sql);
-			pstmt.setString(1, dto.getContent());
-			pstmt.setString(2, dto.getRegdate());
-			pstmt.setInt(3, dto.getNum());
+			pstmt.setString(1, dto.getTodo());
+			pstmt.setInt(2, dto.getNum());
 			flag = pstmt.executeUpdate();
 			System.out.println("메모를 수정했습니다");
 		}catch (Exception e) {
@@ -171,7 +170,7 @@ public class MemoDao {
 		int flag = 0;
 		try {
 			conn = new DBConnect().getConn();
-			String sql = "DELETE FROM memo"
+			String sql = "DELETE FROM todo"
 						+ " WHERE num = ?";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, num);
