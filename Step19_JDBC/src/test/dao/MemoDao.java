@@ -142,12 +142,11 @@ public class MemoDao {
 		try {
 			conn = new DBConnect().getConn();
 			String sql = "UPDATE memo"
-						+ " SET content = ?, regdate = ?"
+						+ " SET content = ?, SYSDATE"
 						+ " WHERE num = ?";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, dto.getContent());
-			pstmt.setString(2, dto.getRegdate());
-			pstmt.setInt(3, dto.getNum());
+			pstmt.setInt(2, dto.getNum());
 			flag = pstmt.executeUpdate();
 			System.out.println("메모를 수정했습니다");
 		}catch (Exception e) {

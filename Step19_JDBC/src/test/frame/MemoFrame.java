@@ -173,9 +173,8 @@ public class MemoFrame extends JFrame implements ActionListener, KeyListener, Pr
 				
 				int num = (int)table.getValueAt(sel_row, 0);
 				String content = (String)table.getValueAt(sel_row, 1);
-				String regdate = (String)table.getValueAt(sel_row, 2);
 				
-				dto = new MemoDto(num, content, regdate);
+				dto = new MemoDto(num, content, null);
 				dao.update(dto);
 				
 				isEditable = false;
