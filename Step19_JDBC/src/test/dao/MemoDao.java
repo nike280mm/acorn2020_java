@@ -113,7 +113,7 @@ public class MemoDao {
 			
 			String sql = "INSERT INTO memo"
 						+ " (num, content, regdate)"
-						+ " VALUES(memo_seq.NEXTVAL, ?, regdate TO_CHAR(regdate, 'YY.MM.DD AM HH:MI:SS'))";
+						+ " VALUES(memo_seq.NEXTVAL, ?, TO_CHAR(regdate, 'YY.MM.DD AM HH:MI:SS') regdate";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, dto.getContent());
 			// sql문을 수행하고 변환된 row의 갯수를 리턴 받는다 (리턴값: 1)
@@ -142,7 +142,7 @@ public class MemoDao {
 		try {
 			conn = new DBConnect().getConn();
 			String sql = "UPDATE memo"
-						+ " SET content = ?, regdate TO_CHAR(regdate, 'YY.MM.DD AM HH:MI:SS')"
+						+ " SET content = ?, TO_CHAR(regdate, 'YY.MM.DD AM HH:MI:SS') regdate"
 						+ " WHERE num = ?";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, dto.getContent());
