@@ -5,50 +5,46 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
-import test.dao.MemberDao;
 import test.dao.TodoDao;
 import test.util.TodoDto;
 
 public class TodoFrame extends JFrame implements ActionListener, PropertyChangeListener{
 	
-	TodoDao dao;
 	TodoDto dto;
+	TodoDao dao;
 	
+	List<TodoDto> list;	
 	DefaultTableModel model;
-	List<TodoDto> list;
 	JTextField inputTodo;
 	JTable table;
 	
 	public TodoFrame() {
 		setLayout(new BorderLayout());
 		
-		JLabel label1 = new JLabel("할 일");
+		JLabel label1 = new JLabel();
 		inputTodo = new JTextField(10);
-		inputTodo.addActionListener(this);
 		
 		JButton saveBtn = new JButton("저장");
-		saveBtn.setActionCommand("save");
-		saveBtn.addActionListener(this);
-		
 		JButton delBtn = new JButton("삭제");
-		delBtn.setActionCommand("delete");
-		delBtn.addActionListener(this);
-		
 		JButton editBtn = new JButton("수정");
+		
+		saveBtn.setActionCommand("save");
+		delBtn.setActionCommand("del");
 		editBtn.setActionCommand("edit");
+		
+		saveBtn.addActionListener(this);
+		delBtn.addActionListener(this);
 		editBtn.addActionListener(this);
 		
 		JPanel panel = new JPanel();
@@ -62,12 +58,11 @@ public class TodoFrame extends JFrame implements ActionListener, PropertyChangeL
 		
 		table = new JTable();
 		
-		String[] colNames = {"순서", "할 일", "언제까지"};
+		String[] colNames = {"순번", "할 일", "기한"};
 		
 		model = new DefaultTableModel(colNames, 0);
 		
 		table.setModel(model);
-		
 		JScrollPane scroll = new JScrollPane(table);
 		add(scroll, BorderLayout.CENTER);
 		
@@ -84,69 +79,62 @@ public class TodoFrame extends JFrame implements ActionListener, PropertyChangeL
 	}
 	
 	public void displayTodo() {
-		
 		model.setRowCount(0);
-		
 		dao = TodoDao.getInstance();
 		list = dao.getList();
 		for(TodoDto tmp : list) {
 			Object[] row = {tmp.getNum(), tmp.getTodo(), tmp.getTill()};
-			
 			model.addRow(row);
 		}
 	}
 	
 	public void save() {
-		dto = new TodoDto();
 		String todo = inputTodo.getText();
-		
+		dto = new TodoDto();
 		dto.setTodo(todo);
+		dao = TodoDao.getInstance();
 		dao.insert(dto);
+		
 		displayTodo();
+		
+		inputTodo.setText("");
 	}
 	
 	public void delete() {
 		int sel_row = table.getSelectedRow();
-		int sel_num = list.get(sel_row).getNum();
-		int confirm = JOptionPane.showConfirmDialog(this, "참말로?");
-		if(confirm == JOptionPane.YES_OPTION) {
-			dao.delete(sel_num);
-		}else{
-			return;
-		}
+		int sel_todo = (int)list.get(sel_row).getNum();
+		
+		dao = TodoDao.getInstance();
+		dao.delete(sel_todo);
+		
 		displayTodo();
 	}
 
 	@Override
-	public void actionPerformed(ActionEvent arg0) {
-		String command = arg0.getActionCommand();
+	public void actionPerformed(ActionEvent e) {
+		String command = e.getActionCommand();
 		if(command.equals("save")) {
 			save();
-		}else if(command.equals("delete")) {
+		}else if(command.equals("del")) {
 			delete();
-		}else if(command.equals("edit")) {
-			
 		}
-		
 	}
 	boolean isEditing = false;
 	@Override
-	public void propertyChange(PropertyChangeEvent evt) {
-		System.out.println(evt.getPropertyName());
-		if(evt.getPropertyName().contentEquals("tableCellEditor")) {
-			if(isEditing) {
-				int sel_row = table.getRowCount();
-				
-				int num = (int)table.getValueAt(sel_row, 0);
-				String todo = (String)table.getValueAt(sel_row, 1);
-				String till = (String)table.getValueAt(sel_row, 2);
-				
-				dto = new TodoDto(num, todo, till);
-				dao.update(dto);
-				
-				isEditing = false;
-			}
-			isEditing = true;
+	public void propertyChange(PropertyChangeEvent arg0) {
+		System.out.println(arg0.getPropertyName());
+		if(isEditing) {
+			int sel_row = table.getSelectedRow();
+			
+			int num = (int)model.getValueAt(sel_row, 0);
+			String todo = (String)model.getValueAt(sel_row, 1);
+			
+			dto = new TodoDto(num, todo, null);
+			dao = TodoDao.getInstance();
+			dao.update(dto);
+			
+			isEditing = false;
 		}
+		isEditing = true;
 	}
 }

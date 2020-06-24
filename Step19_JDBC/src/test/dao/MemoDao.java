@@ -142,7 +142,7 @@ public class MemoDao {
 		try {
 			conn = new DBConnect().getConn();
 			String sql = "UPDATE memo"
-						+ " SET content = ?, SYSDATE"
+						+ " SET content = ?"
 						+ " WHERE num = ?";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, dto.getContent());

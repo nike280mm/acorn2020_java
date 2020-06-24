@@ -142,7 +142,7 @@ public class TodoDao {
 		try {
 			conn = new DBConnect().getConn();
 			String sql = "UPDATE todo"
-						+ " SET todo = ?, SYSDATE"
+						+ " SET todo = ?"
 						+ " WHERE num = ?";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, dto.getTodo());
