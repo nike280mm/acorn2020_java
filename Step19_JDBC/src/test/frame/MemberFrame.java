@@ -98,6 +98,16 @@ public class MemberFrame extends JFrame implements ActionListener, PropertyChang
 		displayMember();
 		
 	}
+	
+	// main 메소드
+	public static void main(String[] args) {
+		MemberFrame f = new MemberFrame();
+		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		f.setBounds(100, 100, 800, 500);
+		f.setVisible(true);
+	
+	}
+	
 	// 테이블에 회원 목록을 출력하는 메소드
 	public void displayMember() {
 		// 
@@ -112,14 +122,6 @@ public class MemberFrame extends JFrame implements ActionListener, PropertyChang
 			
 			model.addRow(row);
 		}
-	}
-	
-	// main 메소드
-	public static void main(String[] args) {
-		MemberFrame f = new MemberFrame();
-		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		f.setBounds(100, 100, 800, 500);
-		f.setVisible(true);
 	}
 	
 	public void save() {
