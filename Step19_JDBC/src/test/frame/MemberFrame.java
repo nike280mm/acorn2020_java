@@ -3,6 +3,10 @@ package test.frame;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -24,7 +28,7 @@ import test.dao.MemberDao;
 import test.util.DBConnect;
 import test.util.MemberDto;
 
-public class MemberFrame extends JFrame implements ActionListener{
+public class MemberFrame extends JFrame implements ActionListener, PropertyChangeListener{
 
 	MemberDao dao = MemberDao.getInstance();
 	MemberDto dto;
@@ -52,6 +56,10 @@ public class MemberFrame extends JFrame implements ActionListener{
 		removeBtn.setActionCommand("remove");
 		removeBtn.addActionListener(this);
 		
+		JButton editBtn = new JButton("수정");
+		editBtn.setActionCommand("edit");
+		editBtn.addActionListener(this);
+		
 		JPanel panel = new JPanel();
 		panel.add(label1);
 		panel.add(inputName);
@@ -59,6 +67,7 @@ public class MemberFrame extends JFrame implements ActionListener{
 		panel.add(inputAddr);
 		panel.add(saveBtn);
 		panel.add(removeBtn);
+		panel.add(editBtn);
 		
 		add(panel, BorderLayout.NORTH);
 		
@@ -67,7 +76,16 @@ public class MemberFrame extends JFrame implements ActionListener{
 		// 칼럼명을 String[]에 순서대로 준비
 		String[] colNames = {"번호", "이름", "주소"};
 		// 테이블에 출력할 정보를 가지고 있는 모델 객체 (칼럼명, row 갯수)
-		model = new DefaultTableModel(colNames, 0);
+		model = new DefaultTableModel(colNames, 0) {
+			@Override
+			public boolean isCellEditable(int row, int column) {
+				// 만일 첫 번째 칼럼이면 수정 불가하도록
+				if(column == 0) {
+					return false;
+				}
+				return true;
+			}
+		};
 		// 모델을 테이블에 연결
 		table.setModel(model);
 		
@@ -75,7 +93,8 @@ public class MemberFrame extends JFrame implements ActionListener{
 		JScrollPane scroll = new JScrollPane(table);
 		// JScrollPane 을 프레임의 가운데에 배치
 		add(scroll, BorderLayout.CENTER);
-		
+		// 테이블에서 발생하는 이벤트 리스너 등록하기
+		table.addPropertyChangeListener(this);
 		displayMember();
 		
 	}
@@ -131,13 +150,15 @@ public class MemberFrame extends JFrame implements ActionListener{
 		if(a >= 0) {
 			int result = JOptionPane.showConfirmDialog(this, "삭제합니까?");
 			if(result == JOptionPane.YES_OPTION) {
-				boolean isSuccess=dao.delete(num);
-				System.out.println(isSuccess);
+				dao.delete(num);
 			}
 			displayMember();
 		}
 	}
 	
+	public void edit() {
+		
+	}
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		String command = e.getActionCommand();
@@ -151,5 +172,32 @@ public class MemberFrame extends JFrame implements ActionListener{
 			}
 			remove();
 		}
+	}
+
+	// 현재 테이블 cell을 수정 중인지 확인
+	boolean isEditing = false;
+	
+	@Override
+	public void propertyChange(PropertyChangeEvent evt) {
+		System.out.println("property change");
+		System.out.println(evt.getPropertyName());
+		if(evt.getPropertyName().equals("tableCellEditor")) {
+			if(isEditing) {// 수정 중일 때
+				// 변화 된 값을 읽어와서 DB에 반영한다
+				// 수정 된 칼럼에 있는 row 전체 값을 읽어온다
+				int sel_row = table.getSelectedRow();
+				int num = (int)model.getValueAt(sel_row, 0);
+				String name = (String)model.getValueAt(sel_row, 1);
+				String addr = (String)model.getValueAt(sel_row, 2);
+				// 수정할 회원의 정보를 MemberDto 객체에 담고
+				dto = new MemberDto(num, name, addr);
+				// DB에 저장하기
+				dao.update(dto);
+				isEditing = false; // 수정 중이 아니라고 표시한다
+			}
+			isEditing = true;
+		}
+//		evt.getOldValue();
+//		evt.getNewValue();
 	}
 }
